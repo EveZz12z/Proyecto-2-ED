@@ -29,3 +29,34 @@ int objeto_inicializar(Objeto *objeto, int id, const char *nombre, TipoObjeto ti
     objeto->valor = valor;
     return 0;
 }
+
+/**
+ * @brief Convierte un tipo de objeto a texto.
+ * @param tipo Tipo de objeto a convertir.
+ * @return Cadena estática ("arma", "armadura", "poción", "otro") o
+ *         "desconocido" si el tipo no es válido. No debe liberarse.
+ */
+const char *objeto_tipo_a_texto(TipoObjeto tipo)
+{
+    switch (tipo) {
+        case TIPO_ARMA:     return "arma";
+        case TIPO_ARMADURA: return "armadura";
+        case TIPO_POCION:   return "poción";
+        case TIPO_OTRO:     return "otro";
+        default:            return "desconocido";
+    }
+}
+
+/**
+ * @brief Imprime un objeto por terminal con el formato: [id] nombre (tipo, valor).
+ * 
+ * @param objeto Objeto a imprimir. Si es NULL, no hace nada.
+ */
+void objeto_imprimir(const Objeto *objeto)
+{
+    if (objeto == NULL)
+    {
+        return;
+    }
+    printf(" [%d] %s (%s, %d)\n", objeto->id, objeto->nombre, objeto_tipo_a_texto(objeto->tipo), objeto->valor);
+}

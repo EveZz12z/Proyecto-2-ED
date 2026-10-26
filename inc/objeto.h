@@ -46,4 +46,19 @@ typedef struct _Objeto {
  */
 int objeto_inicializar(Objeto *objeto, int id, const char *nombre,TipoObjeto tipo, int valor);
 
+/**
+ * @brief Convierte un tipo de objeto a texto.
+ * @param tipo Tipo de objeto a convertir.
+ * @return Cadena estática ("arma", "armadura", "poción", "otro") o
+ *         "desconocido" si el tipo no es válido. No debe liberarse.
+ */
+const char *objeto_tipo_a_texto(TipoObjeto tipo);
+
+/**
+ * @brief Imprime un objeto por terminal con el formato: [id] nombre (tipo, valor).
+ * 
+ * @param objeto Objeto a imprimir. Si es NULL, no hace nada.
+ */
+void objeto_imprimir(const Objeto *objeto);
+
 #endif /* OBJETO_H */
