@@ -19,7 +19,9 @@
  */
 int objeto_inicializar(Objeto *objeto, int id, const char *nombre, TipoObjeto tipo, int valor)
 {
-    if (objeto == NULL || nombre == NULL || nombre[0] == '\0' || id <= 0) {
+    //validacion de: puntero nulo, nombre nulo, nombre vacío o id negativo.
+    if (objeto == NULL || nombre == NULL || nombre[0] == '\0' || id <= 0)
+    {
         return -1;
     }
 
