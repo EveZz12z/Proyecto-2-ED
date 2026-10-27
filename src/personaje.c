@@ -7,18 +7,21 @@
 
 Personaje* crear_personaje(const char* nombre, int vida, int ataque, int defensa) {
     Personaje* nuevo = (Personaje*)malloc(sizeof(Personaje));
-    
+
     if (nuevo == NULL) {
         fprintf(stderr, "Error: Memoria insuficiente para crear personaje.\n");
         return NULL;
     }
 
     strncpy(nuevo->nombre, nombre, LARGO_NOMBRE_PERSONAJE - 1);
-
     nuevo->nombre[LARGO_NOMBRE_PERSONAJE - 1] = '\0';
+
     nuevo->puntos_vida = vida;
+    nuevo->vida_maxima = vida;
     nuevo->ataque = ataque;
+    nuevo->bono_ataque = 0;
     nuevo->defensa = defensa;
+    nuevo->bono_defensa = 0;
     
     return nuevo;
 
@@ -54,5 +57,5 @@ void mostrar_estado(Personaje* p) {
         return;
     }
 
-    printf("%s: %d PV | Ataque %d | Defensa %d\n", p->nombre, p->puntos_vida, p->ataque, p->defensa);
+    printf("%s: %d/%d PV | Ataque %d (+%d) | Defensa %d (+%d)\n", p->nombre, p->puntos_vida, p->vida_maxima, p->ataque, p->bono_ataque, p->defensa, p->bono_defensa);
 }

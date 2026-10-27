@@ -8,8 +8,11 @@
 typedef struct _personaje {
     char nombre[LARGO_NOMBRE_PERSONAJE];
     int puntos_vida;
+    int vida_maxima;
     int ataque;
+    int bono_ataque;
     int defensa;
+    int bono_defensa;
 } Personaje;
 
 // Declaración de funcioness
