@@ -2,6 +2,11 @@
  * Archivo: guardado.h
  * Autor: Pablo Serón
  * Descripción: Guardar y cargar partida en un archivo de texto
+ *
+ * Formato (los nombres no pueden tener espacios):
+ *
+ *   EJ:
+ *   RPG_PARTIDA_V1
  */
 
 #ifndef GUARDADO_H
@@ -19,7 +24,7 @@ typedef enum
     GUARDADO_ERROR_PARAMETRO, // puntero NULL
     GUARDADO_ERROR_ARCHIVO,   // no se pudo abrir, escribir o leer el archivo
     GUARDADO_ERROR_FORMATO,   // el archivo existe pero sus datos son invalidos
-    GUARDADO_ERROR_MEMORIA    // malloc devolvió NULL al reconstruir el inventario
+    GUARDADO_ERROR_MEMORIA    // malloc devolvio NULL al reconstruir el inventario
 
 } ResultadoGuardado;
 
@@ -30,9 +35,10 @@ typedef enum
  * @param personaje Personaje a guardar.
  * @param inventario Inventario a guardar (ya inicializado; puede estar vacio).
  *
- * @return GUARDADO_OK, GUARDADO_ERROR_PARAMETRO si algun puntero es NULL o el
- *         inventario no esta inicializado, o GUARDADO_ERROR_ARCHIVO si falla
- *         la escritura.
+ * @return GUARDADO_OK, GUARDADO_ERROR_PARAMETRO si algun puntero es NULL, el
+ *         inventario no esta inicializado o algun nombre esta vacio o tiene
+ *         espacios (en ese caso no se escribe nada), o GUARDADO_ERROR_ARCHIVO
+ *         si falla la escritura.
  */
 ResultadoGuardado guardar_partida(const char *ruta, const Personaje *personaje,
                                   const Inventario *inventario);

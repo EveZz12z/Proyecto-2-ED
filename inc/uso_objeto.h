@@ -20,7 +20,8 @@ typedef enum
     USO_ERROR_PARAMETRO,      // puntero NULL
     USO_ERROR_NO_ENCONTRADO,  // el inventario no tiene un objeto con ese ID
     USO_ERROR_NO_USABLE,      // el tipo de objeto no se puede usar así
-    USO_ERROR_VIDA_COMPLETA   // la pocion no se consume: la vida ya esta al maximo
+    USO_ERROR_VIDA_COMPLETA,   // la pocion no se consume: la vida ya esta al maximo
+    USO_OK_ENEMIGO_DISTRAIDO  // se uso objeto "otro" (bengala), el enemigo no podra atacar el proximo turno
 
 } ResultadoUso;
 
