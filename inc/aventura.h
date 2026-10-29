@@ -13,6 +13,6 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje);
 void zona_abismo(Inventario* inventario, Personaje* personaje);
 void zona_paramo(Inventario* inventario, Personaje* personaje);
 void mostrar_zonas();
-void iniciar_zona();
+void iniciar_zona(Inventario* inventario, Personaje* personaje);
 
 #endif
