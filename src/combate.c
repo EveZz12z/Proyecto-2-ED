@@ -1,12 +1,30 @@
+/**
+ * @file combate.c
+ * @author Daniela Soto
+ * @brief logica del combate
+ */
 #include "combate.h"
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * @brief muestra por consola el inventario
+ * 
+ * @param inventario 
+ */
 void ver_inventario(const Inventario* inventario){
     printf("\n");
     inventario_listar(inventario);
 }
 
+/**
+ * @brief ataque del jugador al enemigo actual y verifica si a sido derrotado
+ * 
+ * @param enemigo 
+ * @param personaje 
+ * @param cola 
+ * @return int 1 derroto al enemigo, 0 no lo derroto.
+ */
 int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
     int ataque_jug = personaje->ataque + personaje->bono_ataque;
     enemigo->pv -=  ataque_jug;
@@ -15,7 +33,7 @@ int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
         enemigo->pv = 0;
     }
 
-    printf("Atacas al %s: %d de danio | %d de pv", enemigo->nombre, personaje->ataque, enemigo->pv);
+    printf("Atacas al %s: %d de danio | %d/%d pv", enemigo->nombre, personaje->ataque, enemigo->pv, enemigo->vida_max);
 
     if (enemigo->pv == 0){
         printf("¡Derrotaste al enemigo %s! Se retira de la cola de combate", enemigo->nombre);
@@ -26,6 +44,13 @@ int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
     return 0;
 }
 
+/**
+ * @brief ataque del enemigo actual al personaje. se calcula el daño recibido
+ * teneindo en cuanta la defensa y si tiene algun bono de defennsa el personaje.
+ * 
+ * @param enemigo 
+ * @param personaje 
+ */
 void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
     int defensa_jug = personaje->defensa + personaje->bono_defensa;
     int danio_rec = enemigo->ataque - defensa_jug;
@@ -47,6 +72,13 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
     }
 }
 
+/**
+ * @brief imprime en pantalla la interfaz del estado de combate
+ * 
+ * @param personaje 
+ * @param enemigo 
+ * @param cola 
+ */
 void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
     int enemigos = cola_enemigo_size(cola);
     if (enemigos < 0){
@@ -60,12 +92,18 @@ void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
     printf("1. Atacar\n");
     printf("2. Ver inventario\n");
     printf("3. Usar objeto\n");
-    printf(" ");
 }
 
+/**
+ * @brief bucle principal del combate
+ * 
+ * @param personaje 
+ * @param cola 
+ * @param inventario 
+ */
 void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
     if (cola == NULL || inventario == NULL || personaje == NULL){
-        return;
+        return; // verificar que las estructuras existan
     }
     
     while (!cola_enemigo_is_empty(cola) && personaje->puntos_vida > 0){
@@ -80,10 +118,10 @@ void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
         int opcion;
         if (scanf("%d", &opcion) != 1){
             printf("Entrada invalida. INgrese un numero\n");
-            while (getchar() != '\n');
+            while (getchar() != '\n'); //limpia el buffer
             continue;
         }
-        while (getchar() != '\n');
+        while (getchar() != '\n'); //limpia el buffer
 
         switch (opcion){
         case 1:{

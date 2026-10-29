@@ -1,5 +1,16 @@
+/**
+ * @file aventura.h
+ * @author Daniela Soto
+ * @brief creacion de las zonas
+ */
 #include "aventura.h"
 
+/**
+ * @brief organiza la exploracion, recoleccion de objetos combate de la zona
+ * 
+ * @param inventario 
+ * @param personaje 
+ */
 void zona_catacumba(Inventario* inventario, Personaje* personaje){
     printf("Entras a la Catacumba... \n");
     printf("Caminas entre las paredes de pierda. No encuentras nada \n");
@@ -91,6 +102,12 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     printf("Felicidades :) \n");
 }
 
+/**
+ * @brief organiza la exploracion, recoleccion de objetos combate de la zona
+ * 
+ * @param inventario 
+ * @param personaje 
+ */
 void zona_abismo(Inventario* inventario, Personaje* personaje){
     printf("Entras al Abismo... \n");
     printf("El suelo es rocoso y humedo. Te resbalas un poco. \n");
@@ -174,6 +191,12 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
     cola_enemigo_delete(cola);
 }
 
+/**
+ * @brief organiza la exploracion, recoleccion de objetos combate de la zona
+ * 
+ * @param inventario 
+ * @param personaje 
+ */
 void zona_paramo(Inventario* inventario, Personaje* personaje){
     printf("Entras al Paramo... \n");
     printf("Vientos helados y ceniza cubren el paisaje desolado. \n");
@@ -267,6 +290,12 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
     cola_enemigo_delete(cola);
 }
 
+/**
+ * @brief menu para seleccionas la zona de juego
+ * 
+ * @param inventario 
+ * @param personaje 
+ */
 void iniciar_zona(Inventario* inventario, Personaje* personaje){
     if (inventario == NULL || personaje == NULL){
         printf("Personaje o inventario no inicializados. \n");
