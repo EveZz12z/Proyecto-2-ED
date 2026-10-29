@@ -80,7 +80,7 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
  * @param cola 
  */
 void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
-    int enemigos = cola_enemigo_size(cola);
+    int enemigos = cola_enemigo_size(cola) -1;
     if (enemigos < 0){
         enemigos = 0;
     }
@@ -151,14 +151,14 @@ void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
             ResultadoUso objeto_uso = usar_objeto(inventario, id_objeto, personaje);
 
             if (objeto_uso == USO_OK){
-                if (id_objeto == 7){
-                    printf("¡Enciendes la bengala! \n");
-                    printf("El enemigo queda desorientado, pierde su turno de ataque \n");
-                } else {
-                    if (personaje->puntos_vida > 0 && !cola_enemigo_is_empty(cola)){
-                        ataque_enemigo(enemigo_actual, personaje);
-                    }
+                // arma, armadura o pocion: el enemigo responde con su ataque
+                if (personaje->puntos_vida > 0 && !cola_enemigo_is_empty(cola)){
+                    ataque_enemigo(enemigo_actual, personaje);
                 }
+            }else if (objeto_uso == USO_OK_ENEMIGO_DISTRAIDO){
+                // bengala: el enemigo pierde su ataque este turno
+                printf("¡El %s queda desorientado y pierde su turno de ataque!\n", enemigo_actual->nombre);
+                    
             } else if (objeto_uso == USO_ERROR_NO_ENCONTRADO){
                 printf("No se encuentra un objeto con este ID \n");
             } else if (objeto_uso == USO_ERROR_VIDA_COMPLETA){

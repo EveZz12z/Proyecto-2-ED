@@ -53,12 +53,19 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
 
     combate(personaje, cola, inventario);
 
+    // si el personaje murio en el combate, termina la exploracion
+    if (personaje->puntos_vida <= 0){
+        cola_enemigo_delete(cola);
+        return;
+    }
+
     char res_exp;
     printf("¿Seguir explorando? (s/n): \n");
     scanf("%c", &res_exp);
     while (getchar() != '\n');
-    if (res_exp != 's' || res_exp != 'S'){
+    if (res_exp != 's' && res_exp != 'S'){
         printf("Decides regresar. \n");
+        cola_enemigo_delete(cola);
         return;
     }
     
@@ -94,6 +101,12 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     cola_enemigo_enqueue(mastin, cola);
 
     combate(personaje, cola, inventario);
+
+    // si el personaje murio en el combate, termina la exploracion
+    if (personaje->puntos_vida <= 0){
+        cola_enemigo_delete(cola);
+        return;
+    }
 
     cola_enemigo_delete(cola);
 
@@ -153,11 +166,17 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
 
     combate(personaje, cola, inventario);
 
+    // si el personaje murio en el combate, termina la exploracion
+    if (personaje->puntos_vida <= 0){
+        cola_enemigo_delete(cola);
+        return;
+    }
+
     char res_exp;
     printf("¿Seguir explorando? (s/n): \n");
     scanf(" %c", &res_exp);
     while (getchar() != '\n');
-    if (res_exp != 's' || res_exp != 'S'){
+    if (res_exp != 's' && res_exp != 'S'){
         printf("Decides regresar. \n");
         cola_enemigo_delete(cola);
         return;
@@ -283,6 +302,12 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
     cola_enemigo_enqueue(vandalo, cola);
 
     combate(personaje, cola, inventario);
+
+    // si el personaje murio en el combate, termina la exploracion
+    if (personaje->puntos_vida <= 0){
+        cola_enemigo_delete(cola);
+        return;
+    }
 
     printf("¡Has derrotado a los jefes y conquistado el Paramo! \n");
     printf("Felicidades :) \n");
