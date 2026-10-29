@@ -18,18 +18,45 @@
 
 
 /**
+ * @brief Revisa que un nombre se pueda guardar: no vacio y sin espacios,
+ *        porque fscanf con %s lee solo hasta el primer espacio.
+ *
+ * @param nombre Nombre a revisar.
+ *
+ * @return 1 si el nombre es valido, 0 si esta vacio o tiene espacios.
+ */
+static int nombre_sin_espacios(const char *nombre)
+{
+    int i;
+
+    if (nombre[0] == '\0')
+    {
+        return 0;
+    }
+
+    i = 0;
+    while (nombre[i] != '\0')
+    {
+        if (nombre[i] == ' ' || nombre[i] == '\t' || nombre[i] == '\n')
+        {
+            return 0;
+        }
+        i++;
+    }
+    return 1;
+}
+
+/**
  * @brief Escribe la seccion del personaje.
  * 
  * @return 0 si se escribio bien, -1 si fprintf fallo.
  */
 static int escribir_personaje(FILE *archivo, const Personaje *p)
 {
-    if (fprintf(archivo, "%s\n%s\n", MARCA_PERSONAJE, p->nombre) < 0)
-    {
-        return -1;
-    }
-    if (fprintf(archivo, "%d %d %d %d %d %d\n", p->puntos_vida, p->vida_maxima,
-                p->ataque, p->bono_ataque, p->defensa, p->bono_defensa) < 0)
+    // Nombre y numeros en la misma linea (el nombre no contendra espacios)
+    if (fprintf(archivo, "%s\n%s %d %d %d %d %d %d\n", MARCA_PERSONAJE, p->nombre,
+                p->puntos_vida, p->vida_maxima, p->ataque, p->bono_ataque,
+                p->defensa, p->bono_defensa) < 0)
     {
         return -1;
     }
@@ -54,8 +81,8 @@ static int escribir_inventario(FILE *archivo, const Inventario *inventario)
     actual = inventario->cabeza->siguiente;
     while (actual != NULL)
     {
-        // Datos numericos en una linea y el nombre en otra (puede tener espacios gracias a "fgetc")
-        if (fprintf(archivo, "%d %d %d\n%s\n", actual->objeto.id,
+        // Un objeto por linea: id tipo valor nombre (el nombre no tiene espacios)
+        if (fprintf(archivo, "%d %d %d %s\n", actual->objeto.id,
                     (int)actual->objeto.tipo, actual->objeto.valor,
                     actual->objeto.nombre) < 0)
         {
@@ -70,6 +97,7 @@ ResultadoGuardado guardar_partida(const char *ruta, const Personaje *personaje,
                                   const Inventario *inventario)
 {
     char ruta_temporal[LARGO_RUTA];
+    NodoInventario *actual;
     FILE *archivo;
     int error = 0;
 
@@ -77,6 +105,22 @@ ResultadoGuardado guardar_partida(const char *ruta, const Personaje *personaje,
         inventario->cabeza == NULL)
     {
         return GUARDADO_ERROR_PARAMETRO;
+    }
+
+    // Validamos los nombres ANTES de abrir el archivo: si alguno tiene
+    // espacios, no se podria leer de vuelta y no escribimos nada
+    if (!nombre_sin_espacios(personaje->nombre))
+    {
+        return GUARDADO_ERROR_PARAMETRO;
+    }
+    actual = inventario->cabeza->siguiente;
+    while (actual != NULL)
+    {
+        if (!nombre_sin_espacios(actual->objeto.nombre))
+        {
+            return GUARDADO_ERROR_PARAMETRO;
+        }
+        actual = actual->siguiente;
     }
 
     // Escribimos en "ruta.tmp" y recien al final lo renombramos
@@ -99,7 +143,7 @@ ResultadoGuardado guardar_partida(const char *ruta, const Personaje *personaje,
         error = 1;
     }
 
-    // fclose también puede fallar (ej: disco lleno al vaciar el buffer)
+    // fclose tambien puede fallar (ej: disco lleno al vaciar el buffer) (algo rebuscado pero puede pasar)
     if (fclose(archivo) != 0)
     {
         error = 1;
@@ -133,49 +177,6 @@ static int leer_marca(FILE *archivo, const char *marca)
 }
 
 /**
- * @brief Lee una linea de texto completa (puede tener espacios) con fgetc.
- *
- * @param archivo Archivo abierto para lectura.
- * @param destino Arreglo donde se guarda el texto.
- * @param largo Tamaño de destino.
- *
- * @return 1 si leyo un texto no vacio que cabe en destino, 0 si no.
- */
-static int leer_texto(FILE *archivo, char *destino, int largo)
-{
-    int caracter;
-    int i;
-
-    // Descartamos el resto de la linea anterior
-    caracter = fgetc(archivo);
-    while (caracter != '\n' && caracter != EOF)
-    {
-        caracter = fgetc(archivo);
-    }
-    if (caracter == EOF)
-    {
-        return 0;
-    }
-
-    // Leemos la linea del texto hasta el salto de linea
-    i = 0;
-    caracter = fgetc(archivo);
-    while (caracter != '\n' && caracter != EOF)
-    {
-        if (i >= largo - 1)
-        {
-            return 0; // no cabe en destino
-        }
-        destino[i] = (char)caracter;
-        i++;
-        caracter = fgetc(archivo);
-    }
-    destino[i] = '\0';
-
-    return caracter == '\n' && i > 0;
-}
-
-/**
  * @brief Lee la seccion del personaje a una variable temporal.
  * @return GUARDADO_OK o GUARDADO_ERROR_FORMATO.
  */
@@ -188,15 +189,12 @@ static ResultadoGuardado leer_personaje(FILE *archivo, Personaje *destino)
         return GUARDADO_ERROR_FORMATO;
     }
 
-    if (!leer_texto(archivo, temporal.nombre, LARGO_NOMBRE_PERSONAJE))
-    {
-        return GUARDADO_ERROR_FORMATO;
-    }
-
-    // fscanf devuelve cuantos valores logro leer: deben ser los 6
-    if (fscanf(archivo, "%d %d %d %d %d %d", &temporal.puntos_vida,
-               &temporal.vida_maxima, &temporal.ataque, &temporal.bono_ataque,
-               &temporal.defensa, &temporal.bono_defensa) != 6)
+    // %49s: el nombre (maximo 49 caracteres, sin espacios) y luego los 6
+    // numeros. fscanf devuelve cuantos valores logro leer: deben ser los 7
+    if (fscanf(archivo, "%49s %d %d %d %d %d %d", temporal.nombre,
+               &temporal.puntos_vida, &temporal.vida_maxima, &temporal.ataque,
+               &temporal.bono_ataque, &temporal.defensa,
+               &temporal.bono_defensa) != 7)
     {
         return GUARDADO_ERROR_FORMATO;
     }
@@ -239,15 +237,11 @@ static ResultadoGuardado leer_inventario(FILE *archivo, Inventario *destino)
     // Si cantidad es 0 el for no entra: inventario vacio valido
     for (i = 0; i < cantidad; i++)
     {
-        if (fscanf(archivo, "%d %d %d", &id, &tipo, &valor) != 3)
+        if (fscanf(archivo, "%d %d %d %49s", &id, &tipo, &valor, nombre) != 4)
         {
             return GUARDADO_ERROR_FORMATO;
         }
         if (tipo < TIPO_ARMA || tipo > TIPO_OTRO)
-        {
-            return GUARDADO_ERROR_FORMATO;
-        }
-        if (!leer_texto(archivo, nombre, LARGO_NOMBRE_OBJETO))
         {
             return GUARDADO_ERROR_FORMATO;
         }

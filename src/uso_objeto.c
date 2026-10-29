@@ -38,7 +38,7 @@ static ResultadoUso consumir_pocion(Inventario *inventario, Personaje *personaje
         return USO_ERROR_NO_ENCONTRADO;
     }
 
-    // Curamos solo lo que falta para llegar a la vida maxima (asi no nos pasamos)
+    // Curamos solo lo que falta para llegar a la vida maxima (así no nos pasamos)
     curacion = consumida.valor;
     if (curacion > personaje->vida_maxima - personaje->puntos_vida)
     {
@@ -46,12 +46,28 @@ static ResultadoUso consumir_pocion(Inventario *inventario, Personaje *personaje
     }
     personaje->puntos_vida += curacion;
 
-    // Si se curó menos que el valor de la pocion, es porque se alcanzo el máximo
+    // Si se curo menos que el valor de la pocion, es porque se alcanzo el maximo
     printf("Usas %s: recuperas %d PV%s. %s: %d/%d PV.\n", consumida.nombre,
            curacion, curacion < consumida.valor ? " (máximo alcanzado)" : "",
            personaje->nombre, personaje->puntos_vida, personaje->vida_maxima);
+
     printf("%s se elimina del inventario.\n", consumida.nombre);
     return USO_OK;
+}
+
+static ResultadoUso consumir_distraccion(Inventario *inventario, const Objeto *objeto)
+{
+    Objeto consumido;
+
+    //Al igual que la pocion: Se saca el objeto y nos quedamos con la copia
+    //porque despues del free el puntero "objeto" dejara de ser valido
+    if(inventario_eliminar_por_id(inventario, objeto->id, &consumido) != INVENTARIO_OK)
+    {
+        return USO_ERROR_NO_ENCONTRADO;
+    }
+
+    printf("Usas %s: el enemigo se distrae y perdera su proximo ataque\n", consumido.nombre);
+    return USO_OK_ENEMIGO_DISTRAIDO;
 }
 
 /**
@@ -119,6 +135,9 @@ ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje)
         case TIPO_POCION:
             return consumir_pocion(inventario, personaje, objeto);
 
+        case TIPO_OTRO:
+            //la bengala
+            return consumir_distraccion(inventario, objeto);
         default:
             // Otros tipos de objeto no se pueden usar sobre el personaje
             return USO_ERROR_NO_USABLE;
