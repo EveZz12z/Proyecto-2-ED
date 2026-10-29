@@ -113,8 +113,13 @@ void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
             ResultadoUso objeto_uso = usar_objeto(inventario, id_objeto, personaje);
 
             if (objeto_uso == USO_OK){
-                if (personaje->puntos_vida > 0 && !cola_enemigo_is_empty(cola)){
-                    ataque_enemigo(enemigo_actual, personaje);
+                if (id_objeto == 7){
+                    printf("¡Enciendes la bengala! \n");
+                    printf("El enemigo queda desorientado, pierde su turno de ataque \n");
+                } else {
+                    if (personaje->puntos_vida > 0 && !cola_enemigo_is_empty(cola)){
+                        ataque_enemigo(enemigo_actual, personaje);
+                    }
                 }
             } else if (objeto_uso == USO_ERROR_NO_ENCONTRADO){
                 printf("No se encuentra un objeto con este ID \n");
