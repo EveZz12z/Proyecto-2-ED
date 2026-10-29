@@ -5,12 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct _Enemigo{
+typedef struct _Enemigo{
     int id;
     char nombre[30];
     int pv;
     int ataque;
-    int vida_max
+    int vida_max;
 } Enemigo;
 
 typedef struct _Enemigo Enemigo;
