@@ -40,7 +40,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 5, 30);
     cola_enemigo_enqueue(furtivo, cola);
 
-    combate(personaje, &furtivo, cola, inventario);
+    combate(personaje, cola, inventario);
 
     char res_exp;
     printf("¿Seguir explorando? (s/n): \n");
@@ -82,7 +82,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     cola_enemigo_enqueue(furtivo2, cola);
     cola_enemigo_enqueue(mastin, cola);
 
-    combate(personaje, &furtivo2, cola, inventario);
+    combate(personaje, cola, inventario);
 
     cola_enemigo_delete(cola);
 
@@ -134,7 +134,7 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
     cola_enemigo_enqueue(mastin, cola);
     cola_enemigo_enqueue(vandalo, cola);
 
-    combate(personaje, &mastin, cola, inventario);
+    combate(personaje, cola, inventario);
 
     char res_exp;
     printf("¿Seguir explorando? (s/n): \n");
@@ -259,7 +259,7 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
     cola_enemigo_enqueue(mastin, cola);
     cola_enemigo_enqueue(vandalo, cola);
 
-    combate(personaje, &furtivo, cola, inventario);
+    combate(personaje, cola, inventario);
 
     printf("¡Has derrotado a los jefes y conquistado el Paramo! \n");
     printf("Felicidades :) \n");
