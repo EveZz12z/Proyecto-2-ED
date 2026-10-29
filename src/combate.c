@@ -7,7 +7,7 @@ void ver_inventario(const Inventario* inventario){
     inventario_listar(inventario);
 }
 
-int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo* cola){
+int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
     int ataque_jug = personaje->ataque + personaje->bono_ataque;
     enemigo->pv -=  ataque_jug;
 
@@ -47,7 +47,7 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
     }
 }
 
-void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo* cola){
+void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
     int enemigos = cola_enemigo_size(cola);
     if (enemigos < 0){
         enemigos = 0;

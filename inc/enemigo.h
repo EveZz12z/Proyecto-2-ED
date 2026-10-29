@@ -11,7 +11,7 @@ struct _Enemigo{
     int pv;
     int ataque;
     int vida_max
-};
+} Enemigo;
 
 typedef struct _Enemigo Enemigo;
 
