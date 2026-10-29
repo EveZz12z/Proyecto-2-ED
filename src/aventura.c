@@ -293,13 +293,14 @@ void iniciar_zona(Inventario* inventario, Personaje* personaje){
 
     switch (opcion_zona){
     case 1:
-        void zona_catacumba(inventario, personaje);
+        zona_catacumba(inventario, personaje);
         break;
     case 2:
-        void zona_abismo(inventario, personaje);
+        zona_abismo(inventario, personaje);
         break;
     case 3:
-        void zona_paramo(inventario, personaje);
+        zona_paramo(inventario, personaje);
+        break;
     case 4:
         printf("Volviendo al menu principal. \n");
         //Volver al main
