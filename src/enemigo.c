@@ -2,34 +2,37 @@
 #include <stdio.h>
 #include <string.h>
 
-Enemigo crear_enemigo_tipo1(int id, const char* nombre, int pv, int ataque){
+Enemigo crear_enemigo_tipo1(int id, const char* nombre, int pv, int ataque, int vida_max){
     Enemigo  e;
 
-    e.id = 1;
-    strcpy(e.nombre, "tipo1");
-    e.pv = 30;
-    e.ataque = 10;
+    e.id = id;
+    snprintf(e.nombre, sizeof(e.nombre), "%s", nombre);
+    e.pv = pv;
+    e.ataque = ataque;
+    e.vida_max = vida_max;
     
     return e;
 }
-Enemigo crear_enemigo_tipo2(int id, const char* nombre, int pv, int ataque){
+Enemigo crear_enemigo_tipo2(int id, const char* nombre, int pv, int ataque, int vida_max){
     Enemigo  e;
 
-    e.id = 2;
-    strcpy(e.nombre, "tipo2");
-    e.pv = 40;
-    e.ataque = 20;
+    e.id = id;
+    snprintf(e.nombre, sizeof(e.nombre), "%s", nombre);
+    e.pv = pv;
+    e.ataque = ataque;
+    e.vida_max = vida_max;
     
     return e;
 }
 
-Enemigo crear_enemigo_tipo3(int id, const char* nombre, int pv, int ataque){
+Enemigo crear_enemigo_tipo3(int id, const char* nombre, int pv, int ataque, int vida_max){
     Enemigo  e;
 
-    e.id = 3;
-    strcpy(e.nombre, "tipo3");
-    e.pv = 50;
-    e.ataque = 30;
+    e.id = id;
+    snprintf(e.nombre, sizeof(e.nombre), "%s", nombre);
+    e.pv = pv;
+    e.ataque = ataque;
+    e.vida_max = vida_max;
     
     return e;
 }

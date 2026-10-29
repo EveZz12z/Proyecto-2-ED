@@ -35,15 +35,16 @@ int cola_enemigo_is_empty(ColaEnemigo q){
     return(q == NULL || q->front == NULL);
 }
 
-ColaEnemigo cola_enemigo_enqueue(Enemigo e, ColaEnemigo q){
+int cola_enemigo_enqueue(Enemigo e, ColaEnemigo q){
     if (q == NULL){
-        return q;
+        printf("No existe la cola (Enemigo)\n");
+        return 0;
     }
 
     NodoEnemigo* nuevo_nodo = (NodoEnemigo*)malloc(sizeof(NodoEnemigo));
     if (nuevo_nodo == NULL){
         printf("Error: falta de memoria (nuevo nodo enemigo) \n");
-        return q;
+        return 0;
     }
     
     nuevo_nodo->enemigo = e;
@@ -57,7 +58,7 @@ ColaEnemigo cola_enemigo_enqueue(Enemigo e, ColaEnemigo q){
     q->rear = nuevo_nodo;
     q->tamanio++;
 
-    return q;
+    return 1;
 }
 
 Enemigo cola_enemigo_dequeue(ColaEnemigo q){
@@ -81,12 +82,12 @@ Enemigo cola_enemigo_dequeue(ColaEnemigo q){
     return e;
 }
 
-Enemigo cola_enemigo_front(ColaEnemigo q){
+Enemigo* cola_enemigo_front(ColaEnemigo q){
     if (cola_enemigo_is_empty(q)){
         printf("La cola de enemigo esta vacia (front) \n");
-        return (Enemigo){-1, "Desconocido", 0, 0};
+        return NULL;
     }
-    return q->front->enemigo;
+    return &(q->front->enemigo);
 }
 
 int cola_enemigo_size(ColaEnemigo q){

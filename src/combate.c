@@ -15,7 +15,7 @@ int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo* cola){
         enemigo->pv = 0;
     }
 
-    printf("Atacas al %s: %d de danio | %s de pv", enemigo->nombre, personaje->ataque, enemigo->pv);
+    printf("Atacas al %s: %d de danio | %d de pv", enemigo->nombre, personaje->ataque, enemigo->pv);
 
     if (enemigo->pv == 0){
         printf("¡Derrotaste al enemigo %s! Se retira de la cola de combate", enemigo->nombre);
@@ -43,7 +43,7 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
             personaje->puntos_vida = 0;
         }
         
-        printf("El %s ataca: recibes %d de daño | %d pv", enemigo->nombre, enemigo->ataque, personaje->puntos_vida);
+        printf("El %s ataca: danio recibido %d | %d pv", enemigo->nombre, danio_rec, personaje->puntos_vida);
     }
 }
 
@@ -63,7 +63,7 @@ void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo* cola){
     printf(" ");
 }
 
-void combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola, Inventario* inventario){
+void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
     if (cola == NULL || inventario == NULL || personaje == NULL){
         return;
     }
@@ -86,20 +86,21 @@ void combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola, Inventari
         while (getchar() != '\n');
 
         switch (opcion){
-        case 1:
+        case 1:{
             int derrotado = ataque_jugador(enemigo_actual, personaje, cola);
             if (derrotado != 1){
-                ataque_enemigo(enemigo, personaje);
+                ataque_enemigo(enemigo_actual, personaje);
                 if (personaje->puntos_vida == 0){
                     printf("Has sido derrotado :( \n");
                 }
             }
+        }
             break;
-    
-        case 2:
+        case 2:{
             ver_inventario(inventario);
             break;
-        case 3:
+        }
+        case 3:{
             int id_objeto;
             printf("Ingrese ID del objeto a usar: \n");
             if (scanf("%d", &id_objeto) != 1){
@@ -124,6 +125,7 @@ void combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola, Inventari
             }
             
             break;
+        }
         default:
             printf("Opcion invalida \n");
             break;

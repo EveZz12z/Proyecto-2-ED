@@ -37,7 +37,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
         return;
     }
 
-    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 5);
+    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 5, 30);
     cola_enemigo_enqueue(furtivo, cola);
 
     combate(personaje, &furtivo, cola, inventario);
@@ -76,8 +76,8 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     printf("Avanzas con cautela. Te encuentras en un pasillo estrecho \n");
     printf("Un grupo de enemigos bloquea el paso. \n");
 
-    Enemigo furtivo2 = crear_enemigo_tipo1(1, "Furtivo", 30, 5);
-    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7);
+    Enemigo furtivo2 = crear_enemigo_tipo1(1, "Furtivo", 30, 5, 30);
+    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7, 38);
 
     cola_enemigo_enqueue(furtivo2, cola);
     cola_enemigo_enqueue(mastin, cola);
@@ -128,8 +128,8 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
         return;
     }
 
-    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7);
-    Enemigo vandalo = crear_enemigo_tipo2(3, "Vandalo", 45, 10);
+    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7, 38);
+    Enemigo vandalo = crear_enemigo_tipo2(3, "Vandalo", 45, 10, 45);
 
     cola_enemigo_enqueue(mastin, cola);
     cola_enemigo_enqueue(vandalo, cola);
@@ -251,9 +251,9 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
         return;
     }
 
-    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 15);
-    Enemigo mastin = crear_enemigo_tipo2(2, "Mastin", 38, 7);
-    Enemigo vandalo = crear_enemigo_tipo3(3, "Vandalo", 45, 10);
+    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 15, 30);
+    Enemigo mastin = crear_enemigo_tipo2(2, "Mastin", 38, 7, 38);
+    Enemigo vandalo = crear_enemigo_tipo3(3, "Vandalo", 45, 10, 45);
 
     cola_enemigo_enqueue(furtivo, cola);
     cola_enemigo_enqueue(mastin, cola);
