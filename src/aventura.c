@@ -1,13 +1,5 @@
 #include "aventura.h"
 
-void mostrar_zonas(){
-    printf("Zonas disponibles: \n”");
-    printf("1.- Catacumba (dificultad baja)");
-    printf("2.- Abismo (dificultad media)");
-    printf("3.- Paramo (dificultad alta)");
-
-}
-
 void zona_catacumba(Inventario* inventario, Personaje* personaje){
     printf("Entras a la Catacumba... \n");
     printf("Caminas entre las paredes de pierda. No encuentras nada \n");
@@ -286,7 +278,9 @@ void iniciar_zona(Inventario* inventario, Personaje* personaje){
     printf("\n========================================\n");
     printf("         ZONA DE EXPLORACION            \n");
     printf("========================================\n");
-    mostrar_zonas();
+    printf("1.- Catacumba (dificultad baja)");
+    printf("2.- Abismo (dificultad media)");
+    printf("3.- Paramo (dificultad alta)");
     printf("4.- Salir de la exploración\n");
     printf("Seleccione una zona: \n");
 
@@ -314,5 +308,5 @@ void iniciar_zona(Inventario* inventario, Personaje* personaje){
         printf("Opcion invalida. \n");
         break;
     }
-    
+
 }
