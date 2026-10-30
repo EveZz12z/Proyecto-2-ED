@@ -33,10 +33,10 @@ int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
         enemigo->pv = 0;
     }
 
-    printf("Atacas al %s: %d de danio | %d/%d pv", enemigo->nombre, personaje->ataque, enemigo->pv, enemigo->vida_max);
+    printf("Atacas al %s: %d de danio | %d/%d pv \n", enemigo->nombre, ataque_jug, enemigo->pv, enemigo->vida_max);
 
     if (enemigo->pv == 0){
-        printf("¡Derrotaste al enemigo %s! Se retira de la cola de combate", enemigo->nombre);
+        printf("¡Derrotaste al enemigo %s! Se retira de la cola de combate \n", enemigo->nombre);
         cola_enemigo_dequeue(cola);
         return 1;
     }
@@ -56,10 +56,10 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
     int danio_rec = enemigo->ataque - defensa_jug;
     
     if (danio_rec <= 0){
-        printf("¡Tu defensa bloqueo el ataque de %s!", enemigo->nombre);
+        printf("¡Tu defensa bloqueo el ataque de %s! \n", enemigo->nombre);
     } else {
         if (personaje->defensa < 0){
-            printf("¡La defensa de tu personaje se ha roto!");
+            printf("¡La defensa de tu personaje se ha roto! \n");
             personaje->defensa = 0;
         }
 
@@ -68,7 +68,7 @@ void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
             personaje->puntos_vida = 0;
         }
         
-        printf("El %s ataca: danio recibido %d | %d pv", enemigo->nombre, danio_rec, personaje->puntos_vida);
+        printf("El %s ataca: danio recibido %d | %d pv \n", enemigo->nombre, danio_rec, personaje->puntos_vida);
     }
 }
 
@@ -85,9 +85,11 @@ void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
         enemigos = 0;
     }
     
+    int ataque_total = personaje->ataque + personaje->bono_ataque;
+
     printf("\n===== COMBATE =====\n");
     printf("%s: %d PV | Ataque: %d | Defensa: %d\n", personaje->nombre, personaje->puntos_vida, personaje->ataque, personaje->defensa);
-    printf("Enemigo actual: %s (%d PV)\n", enemigo->nombre, enemigo->pv);
+    printf("Enemigo actual: %s (%d/%d PV)\n", enemigo->nombre, enemigo->pv, enemigo->vida_max);
     printf("Enemigos en espera: %d\n", enemigos);
     printf("1. Atacar\n");
     printf("2. Ver inventario\n");
@@ -181,6 +183,6 @@ void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
     }
 
     if (cola_enemigo_is_empty(cola) && personaje->puntos_vida > 0){
-        printf("\n¡Has derrotado a todos los enemigos. ¡Victoria!\n");
+        printf("\n¡Has derrotado a todos los enemigos. Victoria!\n");
     }
 }

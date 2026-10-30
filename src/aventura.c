@@ -6,6 +6,32 @@
 #include "aventura.h"
 
 /**
+ * @brief funcion para recoger un objeto
+ * 
+ * @param inventario 
+ * @param obj 
+ * @param nombre_objeto 
+ */
+void recoger_objeto(Inventario* inventario, Objeto* obj, const char* nombre_objeto){
+    objeto_imprimir(obj);
+    char respuesta;
+    printf("¿Deseas recogerlo? (s/n): \n");
+    scanf(" %c", &respuesta);
+    while(getchar() != '\n');
+    
+    if (respuesta == 's' || respuesta == 'S'){
+        ResultadoInventario resu_inven = inventario_agregar(inventario, obj);
+        if (resu_inven == INVENTARIO_OK){
+            printf("%s agregado al inventario. \n", nombre_objeto);
+        } else {
+            printf("No se pudo agregar el objeto (posible duplicado o inventario lleno). \n");
+        }
+    } else {
+        printf("Dejas el objeto en el suelo. \n");
+    }
+}
+
+/**
  * @brief organiza la exploracion, recoleccion de objetos combate de la zona
  * 
  * @param inventario 
@@ -19,22 +45,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     
     Objeto antiseptico;
     objeto_inicializar(&antiseptico, 1, "antiseptico",  TIPO_POCION, 7);
-    objeto_imprimir(&antiseptico);
-
-    char res_antiseptico;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf("%c", &res_antiseptico);
-    while(getchar() != '\n');
-    if (res_antiseptico == 's' || res_antiseptico == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &antiseptico);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Antiseptico agregado al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &antiseptico, "Antiseptico");
 
     printf("Termina el pasillo oscuro. Entras a un cuarto \n");
     printf("¡Hay un enemigo esperandote en el cuarto! \n");
@@ -61,7 +72,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
 
     char res_exp;
     printf("¿Seguir explorando? (s/n): \n");
-    scanf("%c", &res_exp);
+    scanf(" %c", &res_exp);
     while (getchar() != '\n');
     if (res_exp != 's' && res_exp != 'S'){
         printf("Decides regresar. \n");
@@ -74,28 +85,13 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
 
     Objeto machete;
     objeto_inicializar(&machete, 4, "machete",  TIPO_ARMA, 10);
-    objeto_imprimir(&machete);
-
-    char res_mache;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf("%c", &res_mache);
-    while(getchar() != '\n');
-    if (res_mache == 's' || res_mache == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &machete);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Machete agregado al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &machete, "Machete");
 
     printf("Avanzas con cautela. Te encuentras en un pasillo estrecho \n");
     printf("Un grupo de enemigos bloquea el paso. \n");
 
-    Enemigo furtivo2 = crear_enemigo_tipo1(1, "Furtivo", 30, 5, 30);
-    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7, 38);
+    Enemigo furtivo2 = crear_enemigo_tipo1(2, "Furtivo", 30, 5, 30);
+    Enemigo mastin = crear_enemigo_tipo1(3, "Mastin", 38, 7, 38);
 
     cola_enemigo_enqueue(furtivo2, cola);
     cola_enemigo_enqueue(mastin, cola);
@@ -129,22 +125,7 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
     
     Objeto impermeable;
     objeto_inicializar(&impermeable, 2, "impermeable", TIPO_ARMADURA, 5);
-    objeto_imprimir(&impermeable);
-
-    char res_imp;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf(" %c", &res_imp);
-    while(getchar() != '\n');
-    if (res_imp == 's' || res_imp == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &impermeable);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Impermeable agregado al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &impermeable, "Impermeable");
 
     printf("Cruzas la grieta y llegas a una caverna amplia. \n");
     printf("¡Un par de criaturas resguardan el camino! \n");
@@ -187,22 +168,7 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
 
     Objeto adrenalina;
     objeto_inicializar(&adrenalina, 5, "adrenalina", TIPO_POCION, 15);
-    objeto_imprimir(&adrenalina);
-
-    char res_adr;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf(" %c", &res_adr);
-    while(getchar() != '\n');
-    if (res_adr == 's' || res_adr == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &adrenalina);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Adrenalina agregada al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &adrenalina, "Adrenalina");
 
     printf("¡Has superado los peligros del Abismo y encuentras el ascenso! \n");
     printf("Felicidades :) \n");
@@ -223,64 +189,19 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
     
     Objeto escopeta;
     objeto_inicializar(&escopeta, 3, "escopeta", TIPO_ARMA, 15);
-    objeto_imprimir(&escopeta);
-
-    char res_esc;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf(" %c", &res_esc);
-    while(getchar() != '\n');
-    if (res_esc == 's' || res_esc == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &escopeta);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Escopeta agregada al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &escopeta, "Escopeta");
 
     printf("A pocos metros, colgado de una estaca, ves equipo militar. \n");
     Objeto antidisturbio;
     objeto_inicializar(&antidisturbio, 6, "antidisturbio", TIPO_ARMADURA, 10);
-    objeto_imprimir(&antidisturbio);
-
-    char res_ant;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf(" %c", &res_ant);
-    while(getchar() != '\n');
-    if (res_ant == 's' || res_ant == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &antidisturbio);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Antidisturbio agregado al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &antidisturbio, "Antidisturbio");
 
     printf("El camino principal esta bloqueado por una horda final de enemigos. \n");
     printf("Antes de avanzar, revisas una caja metalica abandonada y ¡encuentras una bengala! \n");
 
     Objeto bengala;
     objeto_inicializar(&bengala, 7, "bengala", TIPO_OTRO, 0);
-    objeto_imprimir(&bengala);
-
-    char res_ben;
-    printf("¿Deseas recogerlo? (s/n): \n");
-    scanf(" %c", &res_ben);
-    while(getchar() != '\n');
-    if (res_ben == 's' || res_ben == 'S'){
-        ResultadoInventario resu_inven = inventario_agregar(inventario, &bengala);
-        if (resu_inven == INVENTARIO_OK){
-            printf("Bengala agregada al inventario. \n");
-        } else {
-            printf("El objeto ya esta en el inventario. \n");
-        }
-    } else {
-        printf("Dejas el objeto en el suelo. \n");
-    }
+    recoger_objeto(inventario, &bengala, "Bengala");
 
     printf("Enemigos:\n");
     printf("1. Furtivo (30 PV)\n");
@@ -293,7 +214,7 @@ void zona_paramo(Inventario* inventario, Personaje* personaje){
         return;
     }
 
-    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 15, 30);
+    Enemigo furtivo = crear_enemigo_tipo1(1, "Furtivo", 30, 5, 30);
     Enemigo mastin = crear_enemigo_tipo2(2, "Mastin", 38, 7, 38);
     Enemigo vandalo = crear_enemigo_tipo3(3, "Vandalo", 45, 10, 45);
 
@@ -332,10 +253,10 @@ void iniciar_zona(Inventario* inventario, Personaje* personaje){
     printf("\n========================================\n");
     printf("         ZONA DE EXPLORACION            \n");
     printf("========================================\n");
-    printf("1.- Catacumba (dificultad baja)");
-    printf("2.- Abismo (dificultad media)");
-    printf("3.- Paramo (dificultad alta)");
-    printf("4.- Salir de la exploración\n");
+    printf("1.- Catacumba (dificultad baja) \n");
+    printf("2.- Abismo (dificultad media) \n");
+    printf("3.- Paramo (dificultad alta) \n");
+    printf("4.- Salir de la exploración \n");
     printf("Seleccione una zona: \n");
 
     if (scanf("%d", &opcion_zona) != 1) {

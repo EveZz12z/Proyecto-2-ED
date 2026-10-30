@@ -41,5 +41,13 @@ void zona_paramo(Inventario* inventario, Personaje* personaje);
  * @param personaje 
  */
 void iniciar_zona(Inventario* inventario, Personaje* personaje);
+/**
+ * @brief funcion para recoger un objeto
+ * 
+ * @param inventario 
+ * @param obj 
+ * @param nombre_objeto 
+ */
+void recoger_objeto(Inventario* inventario, Objeto* obj, const char* nombre_objeto);
 
 #endif
