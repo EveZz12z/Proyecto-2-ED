@@ -200,8 +200,11 @@ static ResultadoGuardado leer_personaje(FILE *archivo, Personaje *destino)
     }
 
     // Validaciones
-    if (temporal.vida_maxima <= 0 || temporal.puntos_vida < 0 ||
-        temporal.puntos_vida > temporal.vida_maxima)
+    if (temporal.vida_maxima <= 0 || 
+        temporal.puntos_vida < 0 ||
+        temporal.puntos_vida > temporal.vida_maxima ||
+        temporal.ataque < 0 || temporal.defensa < 0 ||
+        temporal.bono_ataque < 0 || temporal.bono_defensa < 0)
     {
         return GUARDADO_ERROR_FORMATO;
     }

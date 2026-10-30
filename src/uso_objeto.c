@@ -96,7 +96,7 @@ static ResultadoUso consumir_distraccion(Inventario *inventario, const Objeto *o
  *         USO_ERROR_VIDA_COMPLETA si es una pocion y el personaje ya tiene
  *         la vida al maximo
  */
-ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje)
+ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje, int en_combate)
 {
     Objeto *objeto;
     int ataque_antes;
@@ -145,6 +145,7 @@ ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje)
 
         case TIPO_OTRO:
             //la bengala
+            if(!en_combate) return USO_ERROR_NO_USABLE;
             return consumir_distraccion(inventario, objeto);
         default:
             // Otros tipos de objeto no se pueden usar sobre el personaje

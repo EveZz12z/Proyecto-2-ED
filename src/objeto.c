@@ -25,6 +25,16 @@ int objeto_inicializar(Objeto *objeto, int id, const char *nombre, TipoObjeto ti
         return -1;
     }
 
+    if((int)tipo < TIPO_ARMA || (int)tipo > TIPO_OTRO)
+    {
+        return -1;
+    }
+
+    if(tipo == TIPO_POCION && valor <= 0)
+    {
+        return -1;
+    }
+
     objeto->id = id;
     snprintf(objeto->nombre, LARGO_NOMBRE_OBJETO, "%s", nombre);
     objeto->tipo = tipo;

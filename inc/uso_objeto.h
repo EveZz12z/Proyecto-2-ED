@@ -43,6 +43,6 @@ typedef enum
  *         USO_ERROR_VIDA_COMPLETA si es una pocion y el personaje ya tiene
  *         la vida al maximo
  */
-ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje);
+ResultadoUso usar_objeto(Inventario *inventario, int id, Personaje *personaje, int en_combate);
 
 #endif /* USO_OBJETO_H */
