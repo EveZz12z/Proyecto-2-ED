@@ -103,7 +103,7 @@ int cola_enemigo_enqueue(Enemigo e, ColaEnemigo q){
 Enemigo cola_enemigo_dequeue(ColaEnemigo q){
     if (cola_enemigo_is_empty(q)){
         printf("La cola enemigo esta vacia \n");
-        return (Enemigo){-1, "Desconocido", 0, 0}; //devuelve enemigo de relleno con datos de error
+        return (Enemigo){.id =-1, "Desconocido", .pv = 0, .ataque = 0, .vida_max = 0}; //devuelve enemigo de relleno con datos de error
     }
     
     NodoEnemigo* nodo_eliminar = q->front;

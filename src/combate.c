@@ -54,22 +54,22 @@ int ataque_jugador(Enemigo* enemigo, Personaje* personaje, ColaEnemigo cola){
 void ataque_enemigo(Enemigo* enemigo, Personaje* personaje){
     int defensa_jug = personaje->defensa + personaje->bono_defensa;
     int danio_rec = enemigo->ataque - defensa_jug;
-    
+
     if (danio_rec <= 0){
         printf("¡Tu defensa bloqueo el ataque de %s! \n", enemigo->nombre);
-    } else {
-        if (personaje->defensa < 0){
-            printf("¡La defensa de tu personaje se ha roto! \n");
-            personaje->defensa = 0;
-        }
-
-        personaje->puntos_vida -= danio_rec;
-        if (personaje->puntos_vida < 0){
-            personaje->puntos_vida = 0;
-        }
-        
-        printf("El %s ataca: danio recibido %d | %d pv \n", enemigo->nombre, danio_rec, personaje->puntos_vida);
+        return;
     }
+
+    if (defensa_jug == 0){
+        printf("¡Estas sin defensa, recibes el golpe completo! \n");
+    }
+
+    personaje->puntos_vida -= danio_rec;
+    if (personaje->puntos_vida < 0){
+        personaje->puntos_vida = 0;
+    }
+
+    printf("El %s ataca: danio recibido %d | %d pv \n", enemigo->nombre, danio_rec, personaje->puntos_vida);
 }
 
 /**
@@ -84,8 +84,6 @@ void estado_combate(Personaje* personaje, Enemigo* enemigo, ColaEnemigo cola){
     if (enemigos < 0){
         enemigos = 0;
     }
-    
-    int ataque_total = personaje->ataque + personaje->bono_ataque;
 
     printf("\n===== COMBATE =====\n");
     printf("%s: %d PV | Ataque: %d | Defensa: %d\n", personaje->nombre, personaje->puntos_vida, personaje->ataque, personaje->defensa);
@@ -150,7 +148,7 @@ void combate(Personaje* personaje, ColaEnemigo cola, Inventario* inventario){
             }
             while (getchar() != '\n');
 
-            ResultadoUso objeto_uso = usar_objeto(inventario, id_objeto, personaje);
+            ResultadoUso objeto_uso = usar_objeto(inventario, id_objeto, personaje, 1);
 
             if (objeto_uso == USO_OK){
                 // arma, armadura o pocion: el enemigo responde con su ataque

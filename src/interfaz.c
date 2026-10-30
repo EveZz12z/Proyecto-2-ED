@@ -144,7 +144,7 @@ void iniciar_juego(void) {
                         Objeto* obj = inventario_buscar_por_id(&inventario, id_obj);
                         if (obj != NULL) {
                             Objeto copia_obj = *obj; // Copia para el historial antes de consumirse
-                            ResultadoUso res = usar_objeto(&inventario, id_obj, jugador);
+                            ResultadoUso res = usar_objeto(&inventario, id_obj, jugador, 0);
                             if (res == USO_OK || res == USO_OK_ENEMIGO_DISTRAIDO) {
                                 historial_registrar(historial, ACCION_USAR_OBJETO, "Se usó/equipó un objeto", &copia_obj);
                             } else {
