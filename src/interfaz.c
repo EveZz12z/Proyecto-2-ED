@@ -10,74 +10,53 @@
 #include "aventura.h"
 #include "historial.h"
 
-#define LARGO_RUTA 256
-
 /**
- * @brief Descarta lo que quede en la linea de entrada (hasta '\n' o EOF).
+ * @brief Limpia el buffer de entrada para evitar bucles infinitos con scanf.
  */
+
 static void limpiar_buffer(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
 /**
- * @brief Solicita un numero entero al usuario de forma segura.
- *
- * @param mensaje Texto a mostrar antes de leer.
- * @param valor Donde se guarda el numero leido.
- * @return 1 si se leyo un numero, 0 si la entrada se cerro (EOF, Ctrl+D).
+ * @brief Solicita un número entero al usuario de forma segura.
  */
-static int leer_entero(const char* mensaje, int* valor) {
+
+static int leer_entero(const char* mensaje) {
+    int valor;
     int leidos;
     do {
         printf("%s", mensaje);
-        leidos = scanf("%d", valor);
-        if (leidos == EOF) {
-            return 0;
-        }
+        leidos = scanf("%d", &valor);
         limpiar_buffer();
         if (leidos != 1) {
             printf("Error: Entrada inválida. Por favor, ingresa un número.\n");
         }
     } while (leidos != 1);
-    return 1;
+    return valor;
 }
 
 /**
- * @brief Solicita una cadena sin espacios al usuario (para guardados y nombres).
- *        Lee como maximo limite - 1 caracteres, asi que nunca desborda el buffer.
- *
- * @param mensaje Texto a mostrar antes de leer.
- * @param buffer Arreglo donde se guarda la cadena.
- * @param limite Tamanio total del buffer (incluye el '\0').
- * @return 1 si se leyo una cadena, 0 si la entrada se cerro (EOF, Ctrl+D).
+ * @brief Solicita una cadena de texto al usuario sin espacios (para guardados y nombres).
  */
-static int leer_cadena(const char* mensaje, char* buffer, int limite) {
-    char formato[16];
 
+static void leer_cadena(const char* mensaje, char* buffer, int limite) {
     printf("%s", mensaje);
-    // Arma el formato "%<limite-1>s" para que scanf no escriba mas alla del arreglo
-    snprintf(formato, sizeof(formato), "%%%ds", limite - 1);
-    if (scanf(formato, buffer) != 1) {
-        return 0;
-    }
+    scanf("%s", buffer);
     limpiar_buffer();
-    return 1;
+    buffer[limite - 1] = '\0';
 }
 
 /* ========================================================================== */
 /*                              LÓGICA DEL MENÚ                               */
 /* ========================================================================== */
 
-/**
- * @brief Menu inicial: crear personaje nuevo o cargar partida.
- * @return Personaje creado/cargado, o NULL si la entrada se cerro.
- */
 static Personaje* menu_creacion_personaje(Inventario* inventario) {
     Personaje* p = NULL;
     int opcion;
-    char nombre[LARGO_NOMBRE_PERSONAJE];
-    char ruta[LARGO_RUTA];
+    char nombre[50];
+    char ruta[256];
     ResultadoGuardado res;
 
     printf("=== BIENVENIDO AL RPG ===\n");
@@ -85,34 +64,24 @@ static Personaje* menu_creacion_personaje(Inventario* inventario) {
     printf("2. Cargar Partida\n");
     
     do {
-        if (!leer_entero("Elige una opción (1-2): ", &opcion)) {
-            return NULL;
-        }
-
+        opcion = leer_entero("Elige una opción (1-2): ");
         if (opcion == 1) {
-            if (!leer_cadena("Ingresa el nombre de tu personaje (sin espacios): ",
-                             nombre, LARGO_NOMBRE_PERSONAJE)) {
-                return NULL;
-            }
+            leer_cadena("Ingresa el nombre de tu personaje (sin espacios): ", nombre, 50);
             p = crear_personaje(nombre, 100, 15, 5); // Valores base iniciales
             if (p != NULL) {
                 printf("¡Personaje %s creado con éxito!\n", p->nombre);
             }
         } else if (opcion == 2) {
-            if (!leer_cadena("Ingresa el nombre del archivo a cargar (ej. partida.txt): ",
-                             ruta, LARGO_RUTA)) {
-                return NULL;
-            }
+            leer_cadena("Ingresa el nombre del archivo a cargar (ej. partida.txt): ", ruta, 256);
             p = crear_personaje("Temp", 1, 1, 1); // Personaje temporal para sobreescribir
-            if (p != NULL) {
-                res = cargar_partida(ruta, p, inventario); // Carga directa al inventario y personaje
-                if (res == GUARDADO_OK) {
-                    printf("Partida cargada correctamente.\n");
-                } else {
-                    printf("Error al cargar la partida. Código: %d\n", res);
-                    free(p);
-                    p = NULL;
-                }
+            res = cargar_partida(ruta, p, inventario); // Carga directa al inventario y personaje
+            
+            if (res == GUARDADO_OK) {
+                printf("Partida cargada correctamente.\n");
+            } else {
+                printf("Error al cargar la partida. Código: %d\n", res);
+                free(p);
+                p = NULL;
             }
         } else {
             printf("Opción no válida.\n");
@@ -130,17 +99,12 @@ void iniciar_juego(void) {
     int opcion;
 
     // Inicialización de sistemas core
-    if (inventario_inicializar(&inventario) != INVENTARIO_OK) {
-        printf("Error fatal al inicializar el inventario.\n");
-        return;
-    }
+    inventario_inicializar(&inventario);
     historial = historial_crear();
 
     jugador = menu_creacion_personaje(&inventario);
     if (jugador == NULL) {
-        printf("\nNo se pudo iniciar la partida.\n");
-        inventario_liberar(&inventario);
-        historial_liberar(historial);
+        printf("Error fatal al inicializar el jugador.\n");
         return;
     }
 
@@ -152,15 +116,15 @@ void iniciar_juego(void) {
         printf("1. Explorar Zona\n");
         printf("2. Ver Inventario\n");
         printf("3. Usar / Equipar Objeto\n");
-        printf("4. Ver Historial de Acciones\n");
-        printf("5. Guardar Partida\n");
-        printf("6. Salir del Juego\n");
+        printf("4. Buscar Objeto por Nombre\n");
+        printf("5. Descartar Objeto\n");
+        printf("6. Ver Historial de Acciones\n");
+        printf("7. Deshacer última acción\n");
+        printf("8. Guardar Partida\n");
+        printf("9. Salir del Juego\n");
         printf("===================================\n");
         
-        if (!leer_entero("¿Qué deseas hacer?: ", &opcion)) {
-            printf("\nEntrada cerrada. Saliendo del juego...\n");
-            break;
-        }
+        opcion = leer_entero("¿Qué deseas hacer?: ");
 
         switch (opcion) {
             case 1:
@@ -175,11 +139,7 @@ void iniciar_juego(void) {
             case 3:
                 inventario_listar(&inventario);
                 if (inventario.cantidad > 0) {
-                    int id_obj;
-                    if (!leer_entero("Ingresa el ID del objeto a usar (0 para cancelar): ", &id_obj)) {
-                        salir = 1;
-                        break;
-                    }
+                    int id_obj = leer_entero("Ingresa el ID del objeto a usar (0 para cancelar): ");
                     if (id_obj != 0) {
                         Objeto* obj = inventario_buscar_por_id(&inventario, id_obj);
                         if (obj != NULL) {
@@ -198,27 +158,71 @@ void iniciar_juego(void) {
                 break;
 
             case 4:
+            {
+                char nom_buscar[50];
+                leer_cadena("Ingresa el nombre del objeto a buscar: ", nom_buscar, 50);
+                Objeto* obj = inventario_buscar_por_nombre(&inventario, nom_buscar);
+                if (obj != NULL) {
+                    printf("¡Objeto encontrado! ID: %d | Nombre: %s | Valor: %d\n", obj->id, obj->nombre, obj->valor);
+                } else {
+                    printf("El objeto '%s' no se encuentra en tu inventario.\n", nom_buscar);
+                }
+                break;
+            }
+
+            case 5:
+                inventario_listar(&inventario);
+                if (inventario.cantidad > 0) {
+                    int id_desc = leer_entero("Ingresa el ID del objeto a descartar (0 para cancelar): ");
+                    if (id_desc != 0) {
+                        Objeto copia;
+                        // Pasamos &copia como tercer parámetro para que la función guarde ahí el objeto eliminado
+                        if (inventario_eliminar_por_id(&inventario, id_desc, &copia) == INVENTARIO_OK) {
+                            printf("Descartaste: %s\n", copia.nombre);
+                            historial_registrar(historial, ACCION_DESCARTAR_OBJETO, "Se descartó un objeto", &copia);
+                        } else {
+                            printf("Objeto no encontrado.\n");
+                        }
+                    }
+                }
+                break;
+
+            case 6:
                 historial_mostrar(historial);
                 break;
 
-            case 5:
+            case 7:
             {
-                char ruta_guardado[LARGO_RUTA];
-                if (!leer_cadena("Ingresa el nombre del archivo para guardar (ej. partida.txt): ",
-                                 ruta_guardado, LARGO_RUTA)) {
-                    salir = 1;
-                    break;
+                const Accion *ult = historial_cima(historial);
+                if (ult == NULL) {
+                    printf("No hay acciones que deshacer.\n");
+                } else if (ult->tipo != ACCION_DESCARTAR_OBJETO) {
+                    printf("La última acción no se puede deshacer.\n");
+                } else {
+                    Objeto o = ult->objeto_involucrado;
+                    if (inventario_agregar(&inventario, &o) == INVENTARIO_OK) {
+                        historial_desapilar(historial);
+                        printf("Se restauró %s.\n", o.nombre);
+                    } else {
+                        printf("No se pudo restaurar el objeto.\n");
+                    }
                 }
+                break;
+            }
+
+            case 8:
+            {
+                char ruta_guardado[256];
+                leer_cadena("Ingresa el nombre del archivo para guardar (ej. partida.txt): ", ruta_guardado, 256);
                 if (guardar_partida(ruta_guardado, jugador, &inventario) == GUARDADO_OK) {
                     printf("¡Partida guardada con éxito!\n");
-                    // ACCION_OTRO: ACCION_VACIA queda reservada para "pila vacia" en historial_desapilar
-                    historial_registrar(historial, ACCION_OTRO, "Guardó la partida", NULL);
+                    historial_registrar(historial, ACCION_VACIA, "Guardó la partida", NULL);
                 } else {
                     printf("Ocurrió un error al guardar la partida.\n");
                 }
                 break;
             }
-            case 6:
+            case 9:
                 printf("Saliendo del juego...\n");
                 salir = 1;
                 break;
@@ -237,6 +241,8 @@ void iniciar_juego(void) {
     printf("Limpiando memoria...\n");
     inventario_liberar(&inventario);
     historial_liberar(historial);
-    free(jugador);
+    if (jugador != NULL) {
+        free(jugador);
+    }
     printf("gracias por jugaaarrr\n");
 }
