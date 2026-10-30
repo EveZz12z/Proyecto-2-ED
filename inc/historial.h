@@ -84,4 +84,20 @@ Accion historial_desapilar(PilaHistorial *historial);
  */
 void historial_liberar(PilaHistorial *historial);
 
+/**
+ * @brief Verifica si la pila del historial está vacía.
+ * 
+ * @param h Puntero constante a la pila del historial.
+ * @return 1 si el historial está vacío o es nulo, 0 si contiene elementos.
+ */
+int historial_esta_vacio(const PilaHistorial *h);
+
+/**
+ * @brief Obtiene la acción en la cima del historial sin extraerla (Operación Peek).
+ * 
+ * @param h Puntero constante a la pila del historial.
+ * @return Puntero constante a la estructura Accion en la cima, o NULL si está vacío.
+ */
+const Accion *historial_cima(const PilaHistorial *h);
+
 #endif /* HISTORIAL_H */

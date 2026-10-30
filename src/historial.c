@@ -98,3 +98,14 @@ void historial_liberar(PilaHistorial *historial) {
 
     free(historial);
 }
+
+int historial_esta_vacio(const PilaHistorial *h) {
+    return (h == NULL || h->cima == NULL);
+}
+
+const Accion *historial_cima(const PilaHistorial *h) {
+    if (historial_esta_vacio(h)) {
+        return NULL;
+    }
+    return &(h->cima->accion);
+}
