@@ -91,7 +91,7 @@ void zona_catacumba(Inventario* inventario, Personaje* personaje){
     printf("Un grupo de enemigos bloquea el paso. \n");
 
     Enemigo furtivo2 = crear_enemigo_tipo1(2, "Furtivo", 30, 5, 30);
-    Enemigo mastin = crear_enemigo_tipo1(3, "Mastin", 38, 7, 38);
+    Enemigo mastin = crear_enemigo_tipo2(3, "Mastin", 38, 7, 38);
 
     cola_enemigo_enqueue(furtivo2, cola);
     cola_enemigo_enqueue(mastin, cola);
@@ -139,8 +139,8 @@ void zona_abismo(Inventario* inventario, Personaje* personaje){
         return;
     }
 
-    Enemigo mastin = crear_enemigo_tipo1(2, "Mastin", 38, 7, 38);
-    Enemigo vandalo = crear_enemigo_tipo2(3, "Vandalo", 45, 10, 45);
+    Enemigo mastin = crear_enemigo_tipo2(2, "Mastin", 38, 7, 38);
+    Enemigo vandalo = crear_enemigo_tipo3(3, "Vandalo", 45, 10, 45);
 
     cola_enemigo_enqueue(mastin, cola);
     cola_enemigo_enqueue(vandalo, cola);
