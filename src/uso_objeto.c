@@ -55,6 +55,14 @@ static ResultadoUso consumir_pocion(Inventario *inventario, Personaje *personaje
     return USO_OK;
 }
 
+/**
+ * @brief Uso de la bengala sobre enemigos
+ * 
+ * @param inventario inventario donde se encuentra la bengala
+ * @param objeto tipo de objeto
+ * 
+ * @return Enemigo distraido o bengala no encontrada 
+ */
 static ResultadoUso consumir_distraccion(Inventario *inventario, const Objeto *objeto)
 {
     Objeto consumido;
